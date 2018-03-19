@@ -14,6 +14,7 @@ module PartonShower =
         { From = Gluon; To = (Down, Down); SplittingFunction = fun z -> 1./3. * (cube z - cube(1. - z)) }
     ]
 
+
     let finalStateRadiation alpha (zmin, zmax) (qmax, qmin) particle =
         
         let rec f q particle =

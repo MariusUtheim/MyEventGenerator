@@ -18,11 +18,15 @@ module Decays =
 
     let private decayModess =
         dict [
-            (Muon, [ ([Electron; ElectronNeutrino; MuonNeutrino], 1.) ]);
-            (Tau, [ ([Electron; ElectronNeutrino; TauNeutrino], 0.506); 
-                    ([Muon; MuonNeutrino; TauNeutrino], 0.494)
+
+            (Muon, [ ([Electron; ElectronNeutrino], 1.) ]);
+
+            (Tau, [ ([Electron; ElectronNeutrino], 0.506); 
+                    ([Muon; MuonNeutrino], 0.494)
                   ]);
+
         ]
+
     let decayModes particle = 
         match decayModess.TryGetValue particle.Type with
         | true, value -> value
@@ -39,10 +43,14 @@ module Decays =
             None
         else
             let decayProducts = MonteCarlo.pickWeighted <| decayModes particle
-                                |> List.mapi (fun i t -> { Type = t;
-                                                           Momentum = particle.Momentum; })
-            printfn "Decay %A -> %A" particle.Type.PdgId (List.map (fun product -> product.Type.PdgId) decayProducts)
-            Some decayProducts
+            let momenta = PhaseSpace.sample particle.Type.Mass <| List.map (fun p -> p.Mass) decayProducts
+            let comVelocity = Vec4.Velocity particle.FourMomentum
+            printfn "%A" comVelocity.Magnitude
+            List.zip decayProducts momenta
+            |> List.map (fun (pt, p) -> let p4 = Vec4.OfVector pt.Mass p
+                                                 |> Vec4.Boost comVelocity
+                                        { Type = pt; Momentum = p4.Vec3 })
+            |> Some
         
         
    
@@ -51,7 +59,8 @@ module Decays =
     let decay detectorDistance (event : Event) = 
         event.ForAllIteratively (fun entry -> match particleDecay detectorDistance entry.Particle with
                                               | None -> ()
-                                              | Some decayProducts -> for product in decayProducts do event.WriteEntry(product, entry) |> ignore
+                                              | Some decayProducts -> for product in decayProducts do 
+                                                                          event.WriteEntry(product, entry) |> ignore
                                 )
         event
                                 

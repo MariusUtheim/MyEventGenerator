@@ -11,17 +11,23 @@
 #load "HardScattering.fs"
 #load "PartonShower.fs"
 #load "Decays.fs"
+#load "Jets.fs"
 open MyEventGenerator
 open Particles
 
-[ for _ in 1 .. 100000 -> MonteCarlo.poisson 2. () ] |> List.map float |> List.average
+let partons = [
+    (0.4, 5.0);
+    (1.05, 12.0);
+    (1.5, 5.05);
+    (1.8, 10.5);
+    (2.15, 8.0);
+    (2.6, 13.0);
+    (2.95, 7.5);
+    (3.4, 18.0);
+    (3.75, 4.0);
+    (3.85, 0.25);
+]
 
-
-PartonShower.finalStateRadiation 0.15 (0.01, 0.99) (92.0, 1.0) Up 
-|> List.map (fun (p, q) -> (p.PdgId, q))
-
-Decays.particleDecayEvent 1.0 Particles.Tau
-|> Event.Print
-
-
- 
+Jets.kT 1.0 partons
+Jets.antikT 1.0 partons
+Jets.CambridgeAchen 1.0 partons

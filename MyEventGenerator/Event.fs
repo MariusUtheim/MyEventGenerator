@@ -6,11 +6,16 @@ type EventEntry(event: Event, index : int, particle : Particle, mother : int) =
     
     let _children : List<_> = List<EventEntry>()
 
+    member this.AddChild entry = _children.Add(entry)
     member this.Branch(particles) = _children.AddRange([ for particle in particles -> event.WriteEntry (particle, this) ])
     member this.Particle = particle
     member this.Event = event
     member this.Index = index
     member this.Mother = mother
+    member this.IsFinal = not(_children.Any())
+
+
+
 
 and Event() =
 
@@ -21,6 +26,7 @@ and Event() =
 
     member this.WriteEntry (particle, mother) = assert (mother.Event = this)
                                                 let newEntry = EventEntry(this, entries.Count, particle, mother.Index)
+                                                mother.AddChild(newEntry)
                                                 entries.AddLast(newEntry) |> ignore
                                                 newEntry
 
@@ -38,6 +44,10 @@ and Event() =
 
     static member Print (event : Event) =
         printfn "Idx\tPdg\tEnergy"
-        for entry in event.Entries do printfn "%A\t%A\t%A" entry.Index entry.Particle.Type.PdgId entry.Particle.FourMomentum
+        for entry in event.Entries do printfn "%s%A\t%A\t%A" (if entry.IsFinal then "*" else "") entry.Index entry.Particle.Type.PdgId entry.Particle.FourMomentum
 
-        printfn "Total momentum: %A" <| Seq.sumBy (fun (entry : EventEntry) -> entry.Particle.FourMomentum) event.Entries
+        let totalMomentum = event.Entries 
+                            |> Seq.where (fun entry -> entry.IsFinal)
+                            |> Seq.sumBy (fun (entry : EventEntry) -> entry.Particle.FourMomentum)
+        printfn "Total momentum: %A" totalMomentum
+            

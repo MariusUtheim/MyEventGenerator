@@ -31,6 +31,10 @@ module PhaseSpace =
             Z = sin polar 
         }
 
+    let private _psqr energy m1 m2 =
+        let s, m1sqr, m2sqr = energy * energy, m1 * m1, m2 * m2
+        sqr(m1sqr - m2sqr) / (4. * s) - (m1sqr + m2sqr) / 2. + s / 4.
+
     let size energy masses =
         match masses with
         | [] | [ _ ] -> 0.
@@ -41,17 +45,20 @@ module PhaseSpace =
         | _ -> failwith "Not implemented"
 
 
+
     let sample energy masses =
         match masses with
         | [] -> []
+
         | [ m ] when energy = 0. -> [{ X = 0.; Y = 0.; Z = 0. }]
+
         | [ m ] when energy <> 0. -> failwith "Available phase space is empty"
+
+
         | [ m1; m2 ] -> if m1 + m2 >= energy then failwith "Unable to sample phase space"
-                        else let s = energy * energy
-                             let pnorm = sqrt <| sqr(m1 * m1 - m2 * m2) / (4. * s * s) 
-                                                 + 2. * (m1 * m1 + m2 * m2) + s * s / 4.
-                             let p = pnorm * sampleUnitSphere()
+                        else let p = sqrt(_psqr energy m1 m2) * sampleUnitSphere()
                              [ p; -p ]
+
         | masses -> failwith "Not implemented"
                     
 

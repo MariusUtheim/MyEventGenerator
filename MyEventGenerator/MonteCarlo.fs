@@ -8,6 +8,7 @@ module MonteCarlo =
         let x = _rng.NextDouble()
         if x <> 0. then x else rand()
 
+
     let exponential () = 1. - exp(-rand())
 
 
@@ -17,6 +18,7 @@ module MonteCarlo =
             if sum + term >= threshold then n
             else loop (sum + term) (term * mean / float(n + 1)) (n + 1)
         loop 0. (exp (-mean)) 0
+
 
     let sampler (distribution, envelope, envelopeSampler) =
         let rec f () =
