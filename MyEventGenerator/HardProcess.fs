@@ -1,7 +1,7 @@
 ﻿namespace MyEventGenerator
 open Particles
 
-module HardScattering =
+module HardProcess =
 
     let eebar (energy : float) =
         let particles = [ Electron; Muon; Tau ]

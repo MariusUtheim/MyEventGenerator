@@ -11,6 +11,7 @@ module MonteCarlo =
 
     let exponential () = 1. - exp(-rand())
 
+    let gaussian () = sqrt(-2. * log(rand())) * cos(pi2 * rand())
 
     let poisson mean () =
         let threshold = rand()
@@ -23,7 +24,7 @@ module MonteCarlo =
     let sampler (distribution, envelope, envelopeSampler) =
         let rec f () =
             let x = envelopeSampler()
-            if distribution(x) < rand() * envelope(x) then x else f()
+            if rand() * envelope(x) < distribution(x) then x else f()
         f
 
 

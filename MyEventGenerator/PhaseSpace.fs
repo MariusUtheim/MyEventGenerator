@@ -19,7 +19,8 @@ module PhaseSpace =
         let D = M - massSum
         let rs = List.init (masses.Length - 2) (fun _ -> MonteCarlo.rand()) |> List.sort
 
-        ()
+        failwith "not implemented";
+
 
 
     let sampleUnitSphere () =

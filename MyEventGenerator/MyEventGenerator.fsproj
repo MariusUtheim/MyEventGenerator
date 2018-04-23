@@ -56,11 +56,12 @@
     <Compile Include="Event.fs" />
     <Compile Include="MonteCarlo.fs" />
     <Compile Include="PhaseSpace.fs" />
-    <Compile Include="HardScattering.fs" />
+    <Compile Include="HardProcess.fs" />
     <Compile Include="PartonShower.fs" />
     <Compile Include="Hadronize.fs" />
     <Compile Include="Decays.fs" />
     <None Include="Jets.fs" />
+    <None Include="HeavyIon.fs" />
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
   </ItemGroup>
@@ -69,9 +70,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="OxyPlot">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
     <Reference Include="System.ValueTuple">
-      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

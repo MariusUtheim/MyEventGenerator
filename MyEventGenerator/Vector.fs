@@ -2,19 +2,19 @@
 
 [<StructuredFormatDisplay("({X}, {Y}, {Z})")>]
 type Vec3 = { X : double; Y : double; Z : double }
-            with 
-                 member v.Square = v.X * v.X + v.Y * v.Y + v.Z * v.Z
-                 member v.Magnitude = sqrt v.Square
-                 static member ToFourVector magnitude (v : Vec3) = { T = sqrt(v.Square + magnitude * magnitude); X = v.X; Y = v.Y; Z = v.Z }
+    with 
+        member v.Square = v.X * v.X + v.Y * v.Y + v.Z * v.Z
+        member v.Magnitude = sqrt v.Square
+        static member ToFourVector magnitude (v : Vec3) = { T = sqrt(v.Square + magnitude * magnitude); X = v.X; Y = v.Y; Z = v.Z }
 
-                 static member Zero = { X = 0.; Y = 0.; Z = 0. }
-                 static member (+) (v1, v2) = { X = v1.X + v2.X; Y = v1.Y + v2.Y; Z = v1.Z + v2.Z }
-                 static member (-) (v1, v2) = { X = v1.X - v2.X; Y = v1.Y - v2.Y; Z = v1.Z - v2.Z }
-                 static member (~-) v = { X = -v.X; Y = -v.Y; Z = -v.Z }
-                 static member (*) (r, v) = { X = r * v.X; Y = r * v.Y; Z = r * v.Z }
-                 static member (*) (v, r) = { X = v.X * r; Y = v.Y * r; Z = v.Z * r }
-                 static member (/) (v, r) = { X = v.X / r; Y = v.Y / r; Z = v.Z / r }
-                 static member ( *.) (v1, v2) = v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z
+        static member Zero = { X = 0.; Y = 0.; Z = 0. }
+        static member (+) (v1, v2) = { X = v1.X + v2.X; Y = v1.Y + v2.Y; Z = v1.Z + v2.Z }
+        static member (-) (v1, v2) = { X = v1.X - v2.X; Y = v1.Y - v2.Y; Z = v1.Z - v2.Z }
+        static member (~-) v = { X = -v.X; Y = -v.Y; Z = -v.Z }
+        static member (*) (r, v) = { X = r * v.X; Y = r * v.Y; Z = r * v.Z }
+        static member (*) (v, r) = { X = v.X * r; Y = v.Y * r; Z = v.Z * r }
+        static member (/) (v, r) = { X = v.X / r; Y = v.Y / r; Z = v.Z / r }
+        static member ( *.) (v1, v2) = v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z
 
 
 and [<StructuredFormatDisplay("({T}; {X}, {Y}, {Z})")>] 
