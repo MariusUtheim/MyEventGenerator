@@ -12,6 +12,7 @@ type EventEntry(event: Event, index : int, particle : Particle, mother : int) =
     member this.Event = event
     member this.Index = index
     member this.Mother = mother
+    member this.IsInitial = (mother = 0)
     member this.IsFinal = not(_children.Any())
 
 
@@ -30,7 +31,7 @@ and Event() =
                                                 entries.AddLast(newEntry) |> ignore
                                                 newEntry
 
-    member this.WriteEntry particle = let newEntry = EventEntry(this, entries.Count, particle, 0)
+    member this.WriteEntry particle = let newEntry = EventEntry(this, entries.Count, particle, -1)
                                       entries.AddLast(newEntry) |> ignore
                                       newEntry
 
@@ -42,9 +43,13 @@ and Event() =
             f node.Value
             node <- node.Next
 
+    member this.ForAllOnce f =
+        let entries = this.Entries.ToList()
+        for e in entries do f e
+
     static member Print (event : Event) =
-        printfn "Idx\tPdg\tEnergy"
-        for entry in event.Entries do printfn "%s%A\t%A\t%A" (if entry.IsFinal then "*" else "") entry.Index entry.Particle.Type.PdgId entry.Particle.FourMomentum
+        printfn "Idx\tMother\tPdg\tEnergy"
+        for entry in event.Entries do printfn "%s%A\t%d\t%A\t%A" (if entry.IsFinal then "*" else "") entry.Index entry.Mother entry.Particle.Type.PdgId entry.Particle.FourMomentum
 
         let totalMomentum = event.Entries 
                             |> Seq.where (fun entry -> entry.IsFinal)

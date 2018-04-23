@@ -3,20 +3,22 @@ using GRaff;
 
 namespace MyEventGenerator.Simulator
 {
-    public class CircularTrack : GameElement
+    public class CircularTrack : GameElement, ITrack
     {
-        public CircularTrack(Point center, double radius, double angularVelocity, double creationTime, double annihilationTime, Angle phaseOrigin)
-        {
-            Center = center;
-            Radius = radius;
-            AngularVelocity = angularVelocity;
-            CreationTime = creationTime;
-            AnnihilationTime = annihilationTime;
-            PhaseOrigin = phaseOrigin;
-        }
+        //public CircularTrack(Point center, double radius, double angularVelocity, double creationTime, double annihilationTime, Angle phaseOrigin, Color color)
+        //{
+        //    Center = center;
+        //    Radius = radius;
+        //    AngularVelocity = angularVelocity;
+        //    CreationTime = creationTime;
+        //    AnnihilationTime = annihilationTime;
+        //    PhaseOrigin = phaseOrigin;
+        //    Color = color;
+        //}
 
-        public CircularTrack(Point origin, Vector velocity, double curvature, double creationTime, double annihilationTime)
+        public CircularTrack(Point origin, Vector velocity, double curvature, double creationTime, double annihilationTime, Color color)
         {
+            Contract.Requires<ArgumentOutOfRangeException>(curvature != 0);
             Radius = 1 / GMath.Abs(curvature);
             if (curvature < 0)
                 Center = origin + new Vector(Radius, velocity.Direction - Angle.Deg(90));
@@ -26,6 +28,7 @@ namespace MyEventGenerator.Simulator
             PhaseOrigin = GMath.Atan2(velocity - Angle.Deg(90 * GMath.Sign(curvature)));
             CreationTime = creationTime;
             AnnihilationTime = annihilationTime;
+            Color = color;
         }
 
         public Point Center { get; }
@@ -37,6 +40,10 @@ namespace MyEventGenerator.Simulator
         public double CreationTime { get; }
 
         public double AnnihilationTime { get; }
+
+        public Point CreationLocation => Center + new Vector(Radius, PhaseOrigin);
+
+        public Point AnnihilationLocation => Center + new Vector(Radius, PhaseOrigin + Angle.Rad(AngularVelocity * Lifetime));
 
         public Angle PhaseOrigin { get; }
 

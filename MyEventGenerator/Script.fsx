@@ -17,6 +17,11 @@ open MyEventGenerator
 open Particles
 
 
+HardProcess.produce Up 92.0
+|> PartonShower.radiate 0.15 (0., 0.99) 1.0
+|> Event.Print
+
+
 let particles = [
     (-0.5, 10.0);
     (0.0, 80.0);

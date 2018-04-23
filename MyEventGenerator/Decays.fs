@@ -8,7 +8,9 @@ module Decays =
     let private lifetimes = 
         dict [ 
             (Muon, 2.1969811E-6);
+            (~~Muon, 2.1969811E-6);
             (Tau, 290.3E-15);
+            (~~Tau, 290.3E-15);
         ]
     let lifetime particleType = 
         match lifetimes.TryGetValue particleType with
@@ -19,12 +21,17 @@ module Decays =
     let private decayModess =
         dict [
 
-            (Muon, [ ([Electron; ElectronNeutrino], 1.) ]);
+            (Muon, [ ([ElectronNeutrino; Electron], 1.) ]);
 
-            (Tau, [ ([Electron; ElectronNeutrino], 0.506); 
-                    ([Muon; MuonNeutrino], 0.494)
+            (Tau, [ ([ElectronNeutrino; Electron], 0.506); 
+                    ([MuonNeutrino; Muon], 0.494)
                   ]);
 
+            (~~Muon, [ ([ElectronNeutrino; ~~Electron], 1.) ]);
+
+            (~~Tau, [ ([ElectronNeutrino; ~~Electron], 0.506); 
+                    ([MuonNeutrino; ~~Muon], 0.494)
+                  ]);
         ]
 
     let decayModes particle = 
@@ -44,13 +51,17 @@ module Decays =
         else
             let decayProducts = MonteCarlo.pickWeighted <| decayModes particle
             let momenta = PhaseSpace.sample particle.Type.Mass <| List.map (fun p -> p.Mass) decayProducts
+            if List.sum momenta <> { X = 0.; Y = 0.; Z = 0. } then
+                printfn "Phase space sampled to overall momentum (%A)" <| List.sum momenta
+
             let comVelocity = Vec4.Velocity particle.FourMomentum
-            printfn "%A" comVelocity.Magnitude
-            List.zip decayProducts momenta
-            |> List.map (fun (pt, p) -> let p4 = Vec4.OfVector pt.Mass p
-                                                 |> Vec4.Boost comVelocity
-                                        { Type = pt; Momentum = p4.Vec3 })
-            |> Some
+            
+            let results = List.zip decayProducts momenta
+                          |> List.map (fun (pt, p) -> let p4 = -Vec4.OfVector pt.Mass p
+                                                               |> Vec4.Boost comVelocity
+                                                      { Type = pt; Momentum = p4.Vec3 })
+            
+            Some results
         
         
    

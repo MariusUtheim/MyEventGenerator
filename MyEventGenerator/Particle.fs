@@ -9,3 +9,4 @@ type Particle = {
     member this.Velocity = this.Momentum.Magnitude / this.Energy
     member this.LorentzFactor = 1. / sqrt(1. + sqr this.Velocity)
     member this.TransverseMomentum = sqrt(sqr this.Momentum.X + sqr this.Momentum.Y)
+    
