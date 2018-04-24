@@ -7,8 +7,7 @@ namespace MyEventGenerator.Simulator
 {
     class MainClass
     {
-        static SoundBuffer shockwave = SoundBuffer.Load("Assets/Shockwave.wav");
-        static GRaff.Audio.SoundElement snd;
+        static SoundBuffer shockwave;
 
         public static void Main(string[] args)
         {
@@ -17,6 +16,8 @@ namespace MyEventGenerator.Simulator
 
         static void gameStart()
         {
+            GRaff.Graphics.BlendMode.Current = GRaff.Graphics.BlendMode.Additive;
+            shockwave = SoundBuffer.Load("Assets/Chargeup.wav");
             GlobalEvent.ExitOnEscape = true;
             Instance.Create(new Background { Color = Colors.Black });
 
@@ -30,9 +31,7 @@ namespace MyEventGenerator.Simulator
             };
             GlobalEvent.KeyPressed += key =>
             {
-                if (key == Key.Space)
-                    Global.Time = 0;
-                else if (key == Key.R)
+                if (key == Key.R)
                 {
                     Console.Clear();
                     Instance<StraightTrack>.Do(t => t.Destroy());
@@ -41,28 +40,29 @@ namespace MyEventGenerator.Simulator
                 }
                 else if (key == Key.P)
                 {
-                    snd = shockwave.Play(false, 1, 1);
+                    
                 }
             };
         }
 
 
-        const double c = 3.0;
+        const double c = 5.0;
         const double Bfield = 0.000001;
         const double stepLength = 1;
         static void simulateEvent()
         {
-            Global.Time = -GMath.Round(500 / c);
-            var ev = HardProcess.produce(Particles.Up, 1700);
+            Global.Time = GMath.Round(-60 * 2.3);
+            var ev = HardProcess.produce(Particles.Up, 300);
             ev = Decays.decay(1.0e-6, ev);
             ev = PartonShower.radiate(0.15, 0.01, 0.99, 1.0, ev);
-            Console.WriteLine(ev.Entries.Count());//Event.Print(ev);
+            Event.Print(ev);
 
             var eventMap = new Dictionary<int, ITrack>();
             var initials = ev.Entries.Where(e => e.IsInitial).ToArray();
 
-            Instance.Create(new QuadraticTrack(new Point(0, 500), new Vector(c, 0), -500 / c, 0, Colors.Teal));
-            Instance.Create(new QuadraticTrack(new Point(1000, 500), new Vector(-c, 0), -500 / c, 0, Colors.Red));
+            Instance.Create(new QuadraticTrack(new Point(-2000, 500), new Vector(2500 / -Global.Time, 0), Global.Time, 0, Colors.Teal));
+            Instance.Create(new QuadraticTrack(new Point(3000, 500), new Vector(-2500 / -Global.Time, 0), Global.Time, 0, Colors.Red));
+            Instance.Create(new FlashEffect(0, 15, Colors.White));
 
             foreach (var entry in ev.Entries)
             {
@@ -92,6 +92,9 @@ namespace MyEventGenerator.Simulator
                                                                               mother.AnnihilationTime, mother.AnnihilationTime + (entry.IsFinal ? 10000 : stepLength), color));
                 }
             }
+
+            shockwave.Play(false);
+
         }
 
         static void demo()
