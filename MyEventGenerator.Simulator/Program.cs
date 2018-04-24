@@ -7,6 +7,9 @@ namespace MyEventGenerator.Simulator
 {
     class MainClass
     {
+        static SoundBuffer shockwave = SoundBuffer.Load("Assets/Shockwave.wav");
+        static GRaff.Audio.SoundElement snd;
+
         public static void Main(string[] args)
         {
             Giraffe.Run(1000, 1000, gameStart);
@@ -22,19 +25,23 @@ namespace MyEventGenerator.Simulator
             GlobalEvent.BeginStep += () =>
             {
                 Global.Time++;
-                //Global.Time = Mouse.X;
+                //Global.Time = Mouse.X / 10;
                 Window.Title = Global.Time.ToString();
             };
             GlobalEvent.KeyPressed += key =>
             {
                 if (key == Key.Space)
                     Global.Time = 0;
-                else if (key == Key.F5)
+                else if (key == Key.R)
                 {
                     Console.Clear();
                     Instance<StraightTrack>.Do(t => t.Destroy());
                     Instance<CircularTrack>.Do(t => t.Destroy());
                     simulateEvent();
+                }
+                else if (key == Key.P)
+                {
+                    snd = shockwave.Play(false, 1, 1);
                 }
             };
         }
@@ -42,14 +49,14 @@ namespace MyEventGenerator.Simulator
 
         const double c = 3.0;
         const double Bfield = 0.000001;
-        const double stepLength = 20;
+        const double stepLength = 1;
         static void simulateEvent()
         {
-            Global.Time = -500 / c;
-            var ev = HardProcess.eebar(300);
+            Global.Time = -GMath.Round(500 / c);
+            var ev = HardProcess.produce(Particles.Up, 1700);
             ev = Decays.decay(1.0e-6, ev);
-            ev = PartonShower.radiate(0.15, 0, 0.99, 1.0, ev);
-            Event.Print(ev);
+            ev = PartonShower.radiate(0.15, 0.01, 0.99, 1.0, ev);
+            Console.WriteLine(ev.Entries.Count());//Event.Print(ev);
 
             var eventMap = new Dictionary<int, ITrack>();
             var initials = ev.Entries.Where(e => e.IsInitial).ToArray();
@@ -61,8 +68,6 @@ namespace MyEventGenerator.Simulator
             {
                 var v = new Vector(entry.Particle.Momentum.X, entry.Particle.Momentum.Y) * c / entry.Particle.Energy;
                 var t = entry.Particle.Type;
-                if (t.PdgId == 21)
-                    v += GRandom.Choose(1, -1) * new Vector(v.Magnitude * GRandom.Gaussian(0.1), v.Direction + Angle.Deg(90));
 
                 var color = entry.Particle.Type.Charge > 0 ? Colors.Red
                             : entry.Particle.Type.Charge < 0 ? Colors.Teal

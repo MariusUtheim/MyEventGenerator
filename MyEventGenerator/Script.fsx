@@ -3,6 +3,7 @@
 
 #load "Util.fs"
 #load "Vector.fs"
+#load "Matrix.fs"
 #load "ParticleType.fs"
 #load "Particle.fs"
 #load "Event.fs"

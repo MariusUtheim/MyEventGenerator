@@ -51,6 +51,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Util.fs" />
     <Compile Include="Vector.fs" />
+    <Compile Include="Matrix.fs" />
     <Compile Include="ParticleType.fs" />
     <Compile Include="Particle.fs" />
     <Compile Include="Event.fs" />

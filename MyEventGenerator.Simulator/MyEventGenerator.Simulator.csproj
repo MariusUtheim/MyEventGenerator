@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -29,26 +29,34 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="GRaff">
-      <HintPath>C:\Users\Marius\Source\Repos\GRaff\GRaff\bin\Debug\GRaff.dll</HintPath>
+      <HintPath>..\..\..\G-Raff\GRaff\bin\Debug\GRaff.dll</HintPath>
     </Reference>
     <Reference Include="GRaff.Extensions">
-      <HintPath>C:\Users\Marius\Source\Repos\GRaff\GRaff.Extensions\bin\Debug\GRaff.Extensions.dll</HintPath>
+      <HintPath>..\..\..\G-Raff\GRaff.Extensions\bin\Debug\GRaff.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ITrack.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuadraticTrack.cs" />
     <Compile Include="StraightTrack.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="CircularTrack.cs" />
+    <Compile Include="ITrack.cs" />
+    <Compile Include="QuadraticTrack.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyEventGenerator\MyEventGenerator.fsproj">
-      <Project>{b402b169-e64f-4da3-b182-844150cf63bd}</Project>
+      <Project>{B402B169-E64F-4DA3-B182-844150CF63BD}</Project>
       <Name>MyEventGenerator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shockwave.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

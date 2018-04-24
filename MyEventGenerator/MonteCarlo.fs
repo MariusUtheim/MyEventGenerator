@@ -41,3 +41,13 @@ module MonteCarlo =
                                                         else accumulate (cumulative + weight) remainingElements
             | [] -> failwith "Error: Passed through all elements, but still couldn't reach threshold."
         accumulate 0.0 elementsWithWeight
+    
+    let perpendicularDirection (v : Vec3) =
+        let perpDir = match (v.X, v.Y, v.Z) with
+                      | (0., 0., 0.) -> v
+                      | (0., y, z) -> { X = 0.; Y = -z; Z = y }
+                      | (x, y, _) -> { X = -y; Y = x; Z = 0. }
+
+
+        let M = Matrix.Rotation perpDir (pi2 * rand())
+        M.Apply v

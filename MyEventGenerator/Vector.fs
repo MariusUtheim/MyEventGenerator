@@ -5,6 +5,7 @@ type Vec3 = { X : double; Y : double; Z : double }
     with 
         member v.Square = v.X * v.X + v.Y * v.Y + v.Z * v.Z
         member v.Magnitude = sqrt v.Square
+        static member Normalized (v : Vec3) = v / v.Magnitude
         static member ToFourVector magnitude (v : Vec3) = { T = sqrt(v.Square + magnitude * magnitude); X = v.X; Y = v.Y; Z = v.Z }
 
         static member Zero = { X = 0.; Y = 0.; Z = 0. }
