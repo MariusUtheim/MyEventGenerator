@@ -29,5 +29,5 @@ let particles = [
     (0.4, 60.0);
 ]
 
-let R = 0.5;
-Jets.kT R particles, Jets.antikT R particles, Jets.CambridgeAchen R particles
+let R = 0.6;
+printfn "kT: %A\nCambridge/Aachen: %A\nanti-kT: %A" <| Jets.kT R particles <| Jets.CambridgeAchen R particles <| Jets.antikT R particles
