@@ -26,9 +26,9 @@ namespace MyEventGenerator.Simulator
             if (Global.Time < CreationTime || Global.Time > AnnihilationTime)
                 return;
 
-            var t = (Global.Time - CreationTime) / (AnnihilationTime - Global.Time);
+            var t = (Global.Time - CreationTime) / (AnnihilationTime - CreationTime);
 
-            Draw.FillRectangle(Window.ClientRectangle, Color.Transparent(1 - t));
+            Draw.FillRectangle(Window.ClientRectangle, Color.Transparent(1.0 - t));
         }
     }
 }
