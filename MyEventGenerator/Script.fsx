@@ -18,6 +18,11 @@ open MyEventGenerator
 open Particles
 
 
+let masses = [ 100.; 60.; 20. ]
+let [ p1; p2; p3] = PhaseSpace.sample 250. masses
+printfn "%A" (p1, p2, p3)
+printfn "%A" (p1 + p2 + p3)
+
 HardProcess.produce Up 92.0
 |> PartonShower.radiate 0.15 (0., 0.99) 1.0
 |> Event.Print

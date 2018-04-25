@@ -21,16 +21,16 @@ module Decays =
     let private decayModess =
         dict [
 
-            (Muon, [ ([ElectronNeutrino; Electron], 1.) ]);
+            (Muon, [ ([MuonNeutrino; ~~ElectronNeutrino; Electron], 1.) ]);
 
-            (Tau, [ ([ElectronNeutrino; Electron], 0.506); 
-                    ([MuonNeutrino; Muon], 0.494)
+            (Tau, [ ([TauNeutrino; ~~ElectronNeutrino; Electron], 0.506); 
+                    ([TauNeutrino; ~~MuonNeutrino; Muon], 0.494)
                   ]);
 
-            (~~Muon, [ ([ElectronNeutrino; ~~Electron], 1.) ]);
+            (~~Muon, [ ([~~MuonNeutrino; ElectronNeutrino; ~~Electron], 1.) ]);
 
-            (~~Tau, [ ([ElectronNeutrino; ~~Electron], 0.506); 
-                    ([MuonNeutrino; ~~Muon], 0.494)
+            (~~Tau, [ ([~~TauNeutrino; ElectronNeutrino; ~~Electron], 0.506); 
+                      ([~~TauNeutrino; MuonNeutrino; ~~Muon], 0.494)
                   ]);
         ]
 
@@ -51,8 +51,8 @@ module Decays =
         else
             let decayProducts = MonteCarlo.pickWeighted <| decayModes particle
             let momenta = PhaseSpace.sample particle.Type.Mass <| List.map (fun p -> p.Mass) decayProducts
-            if List.sum momenta <> { X = 0.; Y = 0.; Z = 0. } then
-                printfn "Phase space sampled to overall momentum (%A)" <| List.sum momenta
+            if (List.sum momenta).Magnitude > 10e-12 then
+                printfn "WARNING: Phase space sampled to overall momentum (%A)" <| List.sum momenta
 
             let comVelocity = Vec4.Velocity particle.FourMomentum
             

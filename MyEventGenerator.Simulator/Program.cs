@@ -55,7 +55,7 @@ namespace MyEventGenerator.Simulator
         static void simulateEvent()
         {
             Global.Time = GMath.Round(-60 * 2.2);
-            var ev = HardProcess.produce(Particles.Up, 300);
+            var ev = HardProcess.eebar(10);
             ev = Decays.decay(1.0e-6, ev);
             ev = PartonShower.radiate(0.15, 0.01, 0.99, 1.0, ev);
             Event.Print(ev);

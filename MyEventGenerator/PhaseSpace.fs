@@ -2,6 +2,7 @@
 open System
 
 module PhaseSpace =
+    open System.Security.Cryptography
 
     let private polarAngleSampler =
         MonteCarlo.sampler((fun x -> 1. + sqr(cos x)),
@@ -47,7 +48,7 @@ module PhaseSpace =
 
 
 
-    let sample energy masses =
+    let rec sample energy masses =
         match masses with
         | [] -> []
 
@@ -59,6 +60,16 @@ module PhaseSpace =
         | [ m1; m2 ] -> if m1 + m2 >= energy then failwith "Unable to sample phase space"
                         else let p = sqrt(_psqr energy m1 m2) * sampleUnitSphere()
                              [ p; -p ]
+
+        | [ m1; m2; m3 ] -> let m' = sqr(m1 + m2)
+                            let M = energy
+                            let f m = m * sqrt(kallen(M * M, m * m, m3 * m3) * kallen(m * m, m1 * m1, m2 * m2)) / (M * M * m)
+                            let envelope m = m
+                            let envelopeSampler () = sqrt(m' + MonteCarlo.rand() * (sqr(M - m3) - m'))
+                            let m3' = MonteCarlo.sampler (f, envelope, envelopeSampler) ()
+                            let [ p3; p3' ] = sample M [ m3; m3' ]
+                            let [ p2; p1 ] = sample m3' [ m2; m1 ]
+                            [ p1 + p3' / 2.; p2 + p3' / 2.; p3 ]
 
         | masses -> failwith "Not implemented"
                     
