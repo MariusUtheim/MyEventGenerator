@@ -23,14 +23,16 @@ module Decays =
 
             (Muon, [ ([MuonNeutrino; ~~ElectronNeutrino; Electron], 1.) ]);
 
-            (Tau, [ ([TauNeutrino; ~~ElectronNeutrino; Electron], 0.506); 
-                    ([TauNeutrino; ~~MuonNeutrino; Muon], 0.494)
+            (Tau, [ ([TauNeutrino; ~~ElectronNeutrino; Electron], 0.372); 
+                    ([TauNeutrino; ~~MuonNeutrino; Muon], 0.381);
+                    ([TauNeutrino; ~~Up; Down], 0.247);
                   ]);
 
             (~~Muon, [ ([~~MuonNeutrino; ElectronNeutrino; ~~Electron], 1.) ]);
 
-            (~~Tau, [ ([~~TauNeutrino; ElectronNeutrino; ~~Electron], 0.506); 
-                      ([~~TauNeutrino; MuonNeutrino; ~~Muon], 0.494)
+            (~~Tau, [ ([~~TauNeutrino; ElectronNeutrino; ~~Electron], 0.372); 
+                      ([~~TauNeutrino; MuonNeutrino; ~~Muon], 0.381);
+                      ([~~TauNeutrino; Up; ~~Down], 0.247);
                   ]);
         ]
 

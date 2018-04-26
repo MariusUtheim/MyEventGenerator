@@ -16,7 +16,7 @@ module HardProcess =
         ])
             
     let produce particleType energy =
-        let momentum = PhaseSpace.sample (energy / 2.) [ particleType.Mass; particleType.Mass ]
+        let momentum = PhaseSpace.sample energy [ particleType.Mass; particleType.Mass ]
         Event([ { Type = particleType; Momentum = momentum.[0] };
                 { Type = ~~particleType; Momentum = momentum.[1]; };
              ])
