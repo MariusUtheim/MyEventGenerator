@@ -58,7 +58,7 @@
     <Compile Include="MonteCarlo.fs" />
     <Compile Include="PhaseSpace.fs" />
     <Compile Include="HardProcess.fs" />
-    <Compile Include="PartonShower.fs" />
+    <Compile Include="FinalStateRadiation.fs" />
     <Compile Include="Hadronize.fs" />
     <Compile Include="Decays.fs" />
     <None Include="Jets.fs" />

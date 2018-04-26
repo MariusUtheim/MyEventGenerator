@@ -67,9 +67,9 @@ module PhaseSpace =
                             let envelope m = m
                             let envelopeSampler () = sqrt(m' + MonteCarlo.rand() * (sqr(M - m3) - m'))
                             let m3' = MonteCarlo.sampler (f, envelope, envelopeSampler) ()
-                            let [ p3; p3' ] = sample M [ m3; m3' ]
-                            let [ p2; p1 ] = sample m3' [ m2; m1 ]
-                            [ p1 + p3' / 2.; p2 + p3' / 2.; p3 ]
+                            let p33' = sample M [ m3; m3' ]
+                            let p12 = sample m3' [ m2; m1 ]
+                            [ p12.[0] + p33'.[1] / 2.; p12.[1] + p33'.[1] / 2.; p33'.[0] ]
 
         | masses -> failwith "Not implemented"
                     

@@ -43,21 +43,21 @@ namespace MyEventGenerator.Simulator
                 }
                 else if (key == Key.P)
                 {
-                    createEvent();
+                    
                 }
             };
         }
 
 
-        const double c = 6.0;
+        const double c = 3.0;
         const double Bfield = 0.000001;
         const double stepLength = 1;
         static void simulateEvent()
         {
             Global.Time = GMath.Round(-60 * 2.2);
-            var ev = HardProcess.eebar(10);
+            var ev = HardProcess.produce(Particles.Tau, 300);
             ev = Decays.decay(1.0e-6, ev);
-            ev = PartonShower.radiate(0.15, 0.01, 0.99, 1.0, ev);
+            ev = FinalStateRadiation.partonShower(0.15, 0.01, 0.99, 1.0, ev);
             Event.Print(ev);
 
             var eventMap = new Dictionary<int, ITrack>();
@@ -98,50 +98,7 @@ namespace MyEventGenerator.Simulator
 
         }
 
-        static void createEvent()
-        {
-            
-            var ev = HardProcess.eebar(300);
-            ev = Decays.decay(1.0e-6, ev);
-            ev = PartonShower.radiate(0.15, 0.01, 0.99, 1.0, ev);
 
-            var eventMap = new Dictionary<int, ITrack>();
-            var initials = ev.Entries.Where(e => e.IsInitial).ToArray();
-
-            Instance.Create(new QuadraticTrack(new Point(0, 500), new Vector(500 / 60.0, 0), Global.Time, Global.Time + 60, Colors.Teal));
-            Instance.Create(new QuadraticTrack(new Point(1000, 500), new Vector(-500 / 60.0, 0), Global.Time, Global.Time + 60, Colors.Red));
-            Instance.Create(new FlashEffect(0, 1, Colors.White));
-
-            foreach (var entry in ev.Entries)
-            {
-                var v = new Vector(entry.Particle.Momentum.X, entry.Particle.Momentum.Y) * c / entry.Particle.Energy;
-                var t = entry.Particle.Type;
-
-                var color = entry.Particle.Type.Charge > 0 ? Colors.Red
-                            : entry.Particle.Type.Charge < 0 ? Colors.Teal
-                            : Colors.White.Transparent(0.4);
-                if (entry.Mother == -1)
-                {
-                    if (t.Mass == 0 || t.Charge == 0)
-                        eventMap[entry.Index] = Instance.Create(new StraightTrack(new Point(500, 500), v, Global.Time + 60, Global.Time + 60 +(entry.IsFinal ? 10000 : stepLength), color));
-                    else
-                        eventMap[entry.Index] = Instance.Create(new CircularTrack(new Point(500, 500), v,
-                                                                                 Bfield * entry.Particle.Type.Charge / entry.Particle.Type.Mass,
-                                                                                  Global.Time + 60, Global.Time + 60 + (entry.IsFinal ? 10000 : stepLength), color));
-                }
-                else
-                {
-                    var mother = eventMap[entry.Mother];
-                    if (t.Mass == 0 || t.Charge == 0)
-                        eventMap[entry.Index] = Instance.Create(new StraightTrack(mother.AnnihilationLocation, v, mother.AnnihilationTime, mother.AnnihilationTime + (entry.IsFinal ? 10000 : stepLength), color));
-                    else
-                        eventMap[entry.Index] = Instance.Create(new CircularTrack(mother.AnnihilationLocation, v,
-                                                                              entry.Particle.Type.Mass == 0 ? 0 : Bfield * entry.Particle.Type.Charge / entry.Particle.Type.Mass,
-                                                                              mother.AnnihilationTime, mother.AnnihilationTime + (entry.IsFinal ? 10000 : stepLength), color));
-                }
-            }
-
-        }
 
 
         static void demo()

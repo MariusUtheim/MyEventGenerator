@@ -6,7 +6,7 @@ type BranchingMode = { From : ParticleType;
                        SplittingFunction : float -> float; 
                        Samplez : (float * float) -> float }
 
-module PartonShower =
+module FinalStateRadiation =
 
     let private cube x = x * x * x
 
@@ -88,7 +88,7 @@ module PartonShower =
 
 
 
-    let radiate alphaS (zmin, zmax) qmin (event : Event) =
+    let partonShower alphaS (zmin, zmax) qmin (event : Event) =
         let brancher = branch alphaS (zmin, zmax) qmin
         event.ForAllIteratively (fun entry -> 
             match brancher entry.Particle with

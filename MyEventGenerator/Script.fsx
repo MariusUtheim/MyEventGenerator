@@ -10,7 +10,7 @@
 #load "MonteCarlo.fs"
 #load "PhaseSpace.fs"
 #load "HardProcess.fs"
-#load "PartonShower.fs"
+#load "FinalStateRadiation.fs"
 #load "Decays.fs"
 #load "Jets.fs"
 #load "HeavyIon.fs"
@@ -18,13 +18,8 @@ open MyEventGenerator
 open Particles
 
 
-let masses = [ 100.; 60.; 20. ]
-let [ p1; p2; p3] = PhaseSpace.sample 250. masses
-printfn "%A" (p1, p2, p3)
-printfn "%A" (p1 + p2 + p3)
-
 HardProcess.produce Up 92.0
-|> PartonShower.radiate 0.15 (0., 0.99) 1.0
+|> FinalStateRadiation.partonShower 0.15 (0., 0.99) 1.0
 |> Event.Print
 
 
@@ -36,3 +31,7 @@ let particles = [
 
 let R = 0.6;
 printfn "kT: %A\nCambridge/Aachen: %A\nanti-kT: %A" <| Jets.kT R particles <| Jets.CambridgeAchen R particles <| Jets.antikT R particles
+
+
+let f z = -2./3. * (z * (z + 2.) + 4. * log(1. - z))
+f 0.99999
